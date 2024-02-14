@@ -1,37 +1,75 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Button, TextInput, StyleSheet, View, FlatList, Text } from 'react-native';
+import { SafeAreaView, Button, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Divider } from '@rneui/themed';
+import { auth } from '../controller/Firebase';
 
 const Home = () => {
     const navigation = useNavigation();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+    useEffect(() => {
+        // Vérifiez si l'utilisateur est connecté
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+
+                console.log("User is authenticated");
+
+                // Si l'utilisateur est connecté, mettez à jour l'état
+                setIsAuthenticated(true);
+            }
+        });
+        return unsubscribe;
+
+    }), [];
+
+    // Fonction pour naviguer vers la page de connexion
     const goToSignIn = () => {
         navigation.navigate('SignIn' as never);
     }
 
+    // Fonction pour naviguer vers la page d'inscription
     const goToSignUp = () => {
         navigation.navigate('SignUp' as never);
     }
 
+    // Fonction pour naviguer vers la page d'historique
+    const goToHistorique = () => {
+        navigation.navigate('Hist' as never);
+    }
+
+    // Fonction pour naviguer vers la page de liste
+    const goToList = () => {
+        navigation.navigate('List' as never);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.form}>
-                <Button
-                    onPress={goToSignIn}
-                    title="Se connecter"
-                />
-                <Divider inset={true} insetType="middle" style={styles.divider} />
-                <Button
-                    onPress={goToSignUp}
-                    title="S'inscrire"
-                />
-                <Divider inset={true} insetType="middle" style={styles.divider} />
-                <Button
-                    onPress={() => navigation.navigate('List' as never)}
-                    title="Liste des blockchains"
-                />
-            </View>
+            {isAuthenticated ? (
+                <View style={styles.form}>
+                    <Button
+                        onPress={goToList}
+                        title="Liste"
+                    />
+                    <Divider inset={true} insetType="middle" style={styles.divider} />
+                    <Button
+                        onPress={goToHistorique}
+                        title="Historique"
+                    />
+                </View>
+            ) : (
+                <View style={styles.form}>
+                    <Button
+                        onPress={goToSignIn}
+                        title="Se connecter"
+                    />
+                    <Divider inset={true} insetType="middle" style={styles.divider} />
+                    <Button
+                        onPress={goToSignUp}
+                        title="S'inscrire"
+                    />
+                </View>
+            )}
         </SafeAreaView>
     )
 }
@@ -56,25 +94,8 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
-    label: {
-        fontSize: 16,
-        marginBottom: 5,
-        fontWeight: "bold",
-    },
-    input: {
-        height: 40,
-        borderColor: "#ddd",
-        borderWidth: 1,
-        marginBottom: 15,
-        padding: 10,
-        borderRadius: 5,
-    },
     divider: {
         padding: 10,
-    },
-    errorText: {
-        color: "red",
-        marginBottom: 10,
     },
 });
 

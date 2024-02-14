@@ -7,15 +7,21 @@ const SignIn = () => {
     const [email, onChangeEmail] = useState('');
     const [password, onChangePassword] = useState('');
 
+    // Fonction pour soumettre le formulaire
     const handleSubmit = () => {
+        // Vérifie si l'email et le mot de passe ne sont pas vides
         if (email != "" && password != "") {
+            // Crée un objet User avec l'email et le mot de passe
             const user: User = {
                 email: email,
                 password: password,
             };
 
+            // Appelle la fonction signIn du contrôleur Insc
             signUp(user);
+
         } else {
+            // Affiche une alerte si l'email et le mot de passe sont vides
             Alert.alert("Email and password are required");
         }
     }
@@ -51,7 +57,7 @@ const SignIn = () => {
                     secureTextEntry
                 />
 
-                <Button title="Login" onPress={handleSubmit} />
+                <Button title="Sign Up" onPress={handleSubmit} />
             </View>
         </SafeAreaView>
     )
@@ -89,10 +95,6 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         padding: 10,
         borderRadius: 5,
-    },
-    errorText: {
-        color: "red",
-        marginBottom: 10,
     },
 });
 
