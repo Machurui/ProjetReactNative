@@ -35,6 +35,7 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+
     // Vérifiez si l'utilisateur est connecté
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -43,6 +44,11 @@ const App = () => {
 
         // Si l'utilisateur est connecté, mettez à jour l'état
         setIsAuthenticated(true);
+      } else {
+        console.log("User is not authenticated");
+
+        // Si l'utilisateur n'est pas connecté, mettez à jour l'état
+        setIsAuthenticated(false);
       }
     });
     return unsubscribe;

@@ -6,6 +6,7 @@ import { MMKV } from 'react-native-mmkv';
 import { useNavigation } from '@react-navigation/native';
 import { getAllStats } from '../controller/Api';
 import IP from '../model/IP';
+import { set } from 'firebase/database';
 
 const List = () => {
     const navigation = useNavigation();
@@ -14,6 +15,7 @@ const List = () => {
     const [histIP, setHistIP] = useState<IP[]>([]);
     const [isGood, setIsGood] = useState(false);
     const [isOnline, setIsOnline] = useState(true);
+    const [isDisabled, setIsDisabled] = useState(false);
     const storage = new MMKV();
 
     useEffect(() => {
@@ -24,9 +26,11 @@ const List = () => {
                 if (!state.isConnected) {
                     console.log('Not connected', 'You are not connected to the internet');
                     setIsOnline(false);
+                    setIsDisabled(true);
                 } else {
                     console.log('Connected', 'You are connected to the internet');
                     setIsOnline(true);
+                    setIsDisabled(false);
                 }
             });
         }, 15000);
@@ -104,7 +108,7 @@ const List = () => {
                     value={ip}
                     onChangeText={setIp}
                 />
-                <Button onPress={handleSubmit} title="Rechercher" />
+                <Button onPress={handleSubmit} title="Rechercher" disabled={isDisabled} />
                 <Divider inset={true} insetType="middle" style={styles.divider} />
                 <Button onPress={Historique} title="Historique" />
             </View>

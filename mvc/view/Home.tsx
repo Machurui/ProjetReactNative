@@ -3,6 +3,7 @@ import { SafeAreaView, Button, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Divider } from '@rneui/themed';
 import { auth } from '../controller/Firebase';
+import { signOutFun } from '../controller/Deco';
 
 const Home = () => {
     const navigation = useNavigation();
@@ -43,20 +44,39 @@ const Home = () => {
         navigation.navigate('List' as never);
     }
 
+    // Fonction pour se déconnecter
+    const handleSignOut = () => {
+        // Appelle la fonction de déconnexion
+        signOutFun().then((result) => {
+            if (result.success) {
+                setIsAuthenticated(false);
+            } else {
+                console.error(result.message);
+            }
+        });
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             {isAuthenticated ? (
-                <View style={styles.form}>
-                    <Button
-                        onPress={goToList}
-                        title="Liste"
-                    />
-                    <Divider inset={true} insetType="middle" style={styles.divider} />
-                    <Button
-                        onPress={goToHistorique}
-                        title="Historique"
-                    />
-                </View>
+                <>
+                    <View style={styles.form}>
+                        <Button
+                            onPress={goToList}
+                            title="Liste"
+                        />
+                        <Divider inset={true} insetType="middle" style={styles.divider} />
+                        <Button
+                            onPress={goToHistorique}
+                            title="Historique"
+                        />
+                        <Divider inset={true} insetType="middle" style={styles.divider} />
+                        <Button
+                            onPress={handleSignOut}
+                            title="Sign out"
+                        />
+                    </View>
+                </>
             ) : (
                 <View style={styles.form}>
                     <Button
